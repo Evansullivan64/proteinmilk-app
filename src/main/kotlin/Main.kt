@@ -90,7 +90,7 @@ fun listMilks() {
                                                       
          > ----------------------------------
          > |   1) List all milks            |
-         > |   2) List favourite notes      |
+         > |   2) List favourite milks      |
          > |   3) List milks by price       |
          > |   4) List milks by brand       |
          > ----------------------------------
