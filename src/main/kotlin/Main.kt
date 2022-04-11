@@ -18,8 +18,8 @@ import utils.isValidProteinAmount.isValidProteinAmount
 import java.io.File
 
 private val logger = KotlinLogging.logger {}
-//private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
-//private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+
+//private val milkapi = milkAPI(XMLSerializer(File("milks.xml")))
 private val milkapi = milkAPI(JSONSerializer(File("milks.json")))
 //private val milkapi = milkAPI()
 
@@ -37,7 +37,7 @@ fun runMenu() {
             2  -> listMilks()
             3  -> updateMilk()
             4  -> deleteMilk()
-          //  5 -> archiveMilk()
+            5 -> favouriteMilk()
             6 -> load()
             7 -> save()
             0  -> exitApp()
@@ -65,9 +65,9 @@ fun mainMenu() : Int {
          > |   2) List all milks methods    |
          > |   3) Update a milk             |
          > |   4) Delete a milk             |
-         > |   5) Archive a note            |
-         > |   6) Load Note                 |  
-         > |   7) Save note                |
+         > |   5) favourite a milk          |
+         > |   6) Load milk                 |  
+         > |   7) Save milk                 |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -90,36 +90,34 @@ fun listMilks() {
                                                       
          > ----------------------------------
          > |   1) List all milks            |
-         > |   2) List active notes         |
-         > |   3) List archived note        |
-         > |   4) List note starting with   |
-         > |   5) Search Note by title      |
+         > |   2) List favourite notes      |
+         > |   3) List milks by price       |
+         > |   4) List milks by brand       |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
          > ==>> """.trimMargin(">"))
         when(option){
-            1-> listAllMilks()
-          //  2 -> searchByProtein()
-          //  3-> searchByTitle()
-           // 4 -> searchByBrand()
+            1 -> listAllMilks()
+            2 -> listFavouriteMilk()
+            3 -> searchByPrice()
+            4 -> searchByBrand()
+
 
             else -> println("Invalid option entered: $option");
         }
-    }// else {
-    //    println("Option Invalid - No notes stored");
-   // }
+    }
 
 
 fun addMilk(){
 
     val title = ScannerInput.readNextLine("enter milk name")
     val price = readNextDouble("enter the price")
-    val proteinAmount = readNextDouble("enter protein content")
+    val proteinAmount = readNextDouble("enter protein content by grams")
     val brand = ScannerInput.readNextLine("enter brand")
     val litres = readNextDouble("enter amount of litres")
 
-    val isAdded = milkapi.add(proteinMilk(title,price,proteinAmount,brand,litres))
+    val isAdded = milkapi.add(proteinMilk(title,price,proteinAmount,brand,litres,false))
 
     if (isAdded) {
         println("Added Successfully")
@@ -139,14 +137,14 @@ fun updateMilk(){
             while(!isValidPrice(price)){
                 price = readNextDouble("Value cannot be 0, enter correct price")
             }
-            var proteinAmount = readNextDouble("Enter a protein content for the milk: ")
+            var proteinAmount = readNextDouble("Enter a protein content for the milk by grams: ")
             while(!isValidProteinAmount(proteinAmount)){
                 proteinAmount = readNextDouble("Enter a protein content for the milk: ")
             }
             var brand = ScannerInput.readNextLine("Enter a brand for the milk: ")
            var litres = ScannerInput.readNextDouble("enter amount of litres")
 
-              if (milkapi.updateMilks(indexToUpdate, proteinMilk(milkTitle, price, proteinAmount, brand,litres))){
+              if (milkapi.updateMilks(indexToUpdate, proteinMilk(milkTitle, price, proteinAmount, brand,litres,false))){
                 println("Update Successful")
             } else {
                 println("Update Failed")
@@ -172,6 +170,44 @@ fun deleteMilk(){
     }
 }
 
+fun searchByBrand() {
+    val searchBrand = ScannerInput.readNextLine("Enter the brand to search by: ")
+    val searchResults = milkapi.listMilksByBrand(searchBrand)
+    if (searchResults.isEmpty()) {
+        println("No milks found by that brand")
+    } else {
+        println(searchResults)
+    }
+}
+
+ fun searchByPrice(){
+     val searchprice = ScannerInput.readNextDouble("Enter the price to search by: ")
+     val searchResults = milkapi.listMilksByPrice(searchprice)
+     if (searchResults.isEmpty()) {
+         println("No milks found with that price")
+     } else {
+         println(searchResults)
+     }
+ }
+
+fun listFavouriteMilk(){
+    println(milkapi.listFavouriteMilk())
+}
+
+fun favouriteMilk(){
+    listAllMilks()
+
+    if(milkapi.numberOfMilks()> 0){
+        val indextoFavourite = readNextInt("enter a milk to favourite")
+        if(milkapi.isValidIndex(indextoFavourite)){
+            if(milkapi.favouriteMilk(indextoFavourite)){
+                println("Favourited successfully")
+            }else{
+                println("Favourited failed")
+            }
+        }
+    }
+}
 
 
 fun listAllMilks(){

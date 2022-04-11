@@ -43,8 +43,18 @@ class milkAPI(serializerType: Serializer) {
     }
 
     fun listAllMilks(): String =
-        if  (proteinMilks.isEmpty()) "No notes stored"
+        if  (proteinMilks.isEmpty()) "No milks stored"
         else formatListString(proteinMilks)
+
+
+    fun listMilksByBrand( brand:String): String =
+        if  (numberOfMilks() == 0)  "No milks stored"
+        else formatListString(proteinMilks.filter { milk -> milk.brand.contains(brand) })
+
+    fun listMilksByPrice( Price:Double): String =
+        if  (numberOfMilks() == 0)  "No milks stored"
+        else formatListString(proteinMilks.filter { milk -> milk.price.equals(Price) })
+
 
     fun formatListString(milksToFormat : List<proteinMilk>) : String =
         milksToFormat
@@ -60,6 +70,26 @@ class milkAPI(serializerType: Serializer) {
             proteinMilks[index]
         } else null
     }
+
+    fun favouriteMilk(milkToFavourite: Int): Boolean {
+        if (isValidIndex(milkToFavourite)) {
+            val milksToFavourite = proteinMilks[milkToFavourite]
+            if (!milksToFavourite.isMilkFavourited) {
+                milksToFavourite.isMilkFavourited = true
+                return true
+            }
+        }
+        return false
+    }
+
+    fun listFavouriteMilk(): String =
+        if  (numberOfFavouriteMilks() == 0) "you have no favourite milks"
+        else formatListString(proteinMilks.filter { milks -> milks.isMilkFavourited})
+
+
+    fun numberOfFavouriteMilks(): Int = proteinMilks
+        .filter { milk: proteinMilk -> milk.isMilkFavourited }
+        .count()
 
 
 
