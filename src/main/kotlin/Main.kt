@@ -1,16 +1,22 @@
 
 
 
+import controllers.milkAPI
+
+import models.proteinMilk
 import mu.KotlinLogging
 
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
+
 import java.io.File
 
 private val logger = KotlinLogging.logger {}
 //private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
 //private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
 //private val noteAPI = NoteAPI(YAMLSerializer(File("notes.yml")))
+private val milkapi = milkAPI()
+
 
 fun main(args: Array<String>) {
     runMenu()
@@ -21,7 +27,7 @@ fun runMenu() {
         val option = mainMenu()
 
         when (option) {
-           // 1  -> addMilk()
+            1  -> addMilk()
             2  -> listMilks()
           //  3  -> updateMilk()
            // 4  -> deleteMilk()
@@ -97,4 +103,22 @@ fun listMilks() {
     }// else {
     //    println("Option Invalid - No notes stored");
    // }
+
+
+fun addMilk(){
+
+    val title = ScannerInput.readNextLine("enter milk name")
+    val price = ScannerInput.readNextDouble("enter the price")
+    val proteinAmount = ScannerInput.readNextDouble("enter protein content")
+    val brand = ScannerInput.readNextLine("enter brand")
+    val litres = ScannerInput.readNextDouble("enter amount of litres")
+
+    val isAdded = milkapi.add(proteinMilk(title,price,proteinAmount,brand,litres))
+
+    if (isAdded) {
+        println("Added Successfully")
+    } else {
+        println("Add Failed")
+    }
+}
 
