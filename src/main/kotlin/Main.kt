@@ -7,7 +7,12 @@ import models.proteinMilk
 import mu.KotlinLogging
 
 import utils.ScannerInput
+import utils.ScannerInput.readNextDouble
 import utils.ScannerInput.readNextInt
+import utils.isValidListIndex.isValidListIndexs
+import utils.isValidPrice.isValidPrice
+import utils.isValidProteinAmount
+import utils.isValidProteinAmount.isValidProteinAmount
 
 import java.io.File
 
@@ -30,7 +35,7 @@ fun runMenu() {
             1  -> addMilk()
             2  -> listMilks()
           //  3  -> updateMilk()
-           // 4  -> deleteMilk()
+            4  -> deleteMilk()
           //  5 -> archiveMilk()
           //  6 -> load()
           //  7 -> save()
@@ -108,10 +113,10 @@ fun listMilks() {
 fun addMilk(){
 
     val title = ScannerInput.readNextLine("enter milk name")
-    val price = ScannerInput.readNextDouble("enter the price")
-    val proteinAmount = ScannerInput.readNextDouble("enter protein content")
+    val price = readNextDouble("enter the price")
+    val proteinAmount = readNextDouble("enter protein content")
     val brand = ScannerInput.readNextLine("enter brand")
-    val litres = ScannerInput.readNextDouble("enter amount of litres")
+    val litres = readNextDouble("enter amount of litres")
 
     val isAdded = milkapi.add(proteinMilk(title,price,proteinAmount,brand,litres))
 
@@ -121,4 +126,57 @@ fun addMilk(){
         println("Add Failed")
     }
 }
+
+
+fun updateMilk(){
+    listAllMilks()
+    if (milkapi.numberOfMilks() > 0) {
+        val indexToUpdate = readNextInt("Enter the index of the milk to update: ")
+        if (milkapi.isValidIndex(indexToUpdate)) {
+            val milkTitle = ScannerInput.readNextLine("Enter a title for the Milk: ")
+            var price = readNextDouble("Enter a price ")
+            while(!isValidPrice(price)){
+                price = readNextDouble("Value cannot be 0, enter correct price")
+            }
+            var proteinAmount = readNextDouble("Enter a protein content for the milk: ")
+            while(!isValidProteinAmount(proteinAmount)){
+                proteinAmount = readNextDouble("Enter a protein content for the milk: ")
+            }
+            var brand = ScannerInput.readNextLine("Enter a brand for the milk: ")
+           var litres = ScannerInput.readNextDouble("enter amount of litres")
+
+              if (milkapi.updateMilks(indexToUpdate, proteinMilk(milkTitle, price, proteinAmount, brand,litres))){
+                println("Update Successful")
+            } else {
+                println("Update Failed")
+            }
+        } else {
+            println("There are no milk for this index number")
+        }
+    }
+
+}
+
+
+fun deleteMilk(){
+    listAllMilks()
+    if (milkapi.numberOfMilks() > 0) {
+        val indexToDelete = readNextInt("Enter the index of the milk to delete: ")
+         val milkToDelete = milkapi.delete(indexToDelete)
+        if (milkToDelete != null) {
+            println("Delete Successful! Deleted milk: ${milkToDelete.milkTitle}")
+        } else {
+            println("Delete NOT Successful")
+        }
+    }
+}
+
+
+
+fun listAllMilks(){
+
+    println(milkapi.listAllMilks())
+}
+
+
 
