@@ -5,6 +5,7 @@ import controllers.milkAPI
 
 import models.proteinMilk
 import mu.KotlinLogging
+import persistence.JSONSerializer
 
 import utils.ScannerInput
 import utils.ScannerInput.readNextDouble
@@ -19,8 +20,8 @@ import java.io.File
 private val logger = KotlinLogging.logger {}
 //private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
 //private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
-//private val noteAPI = NoteAPI(YAMLSerializer(File("notes.yml")))
-private val milkapi = milkAPI()
+private val milkapi = milkAPI(JSONSerializer(File("milks.json")))
+//private val milkapi = milkAPI()
 
 
 fun main(args: Array<String>) {
@@ -34,12 +35,12 @@ fun runMenu() {
         when (option) {
             1  -> addMilk()
             2  -> listMilks()
-          //  3  -> updateMilk()
+            3  -> updateMilk()
             4  -> deleteMilk()
           //  5 -> archiveMilk()
-          //  6 -> load()
-          //  7 -> save()
-           // 0  -> exitApp()
+            6 -> load()
+            7 -> save()
+            0  -> exitApp()
             else -> println("Invalid  option entered: $option")
         }
     } while (true)
@@ -60,10 +61,10 @@ fun mainMenu() : Int {
                                                
          > ----------------------------------
          > |                                |
-         > |   1) Add a note                |
-         > |   2) List all notes methods    |
-         > |   3) Update a note             |
-         > |   4) Delete a note             |
+         > |   1) Add protein milk          |
+         > |   2) List all milks methods    |
+         > |   3) Update a milk             |
+         > |   4) Delete a milk             |
          > |   5) Archive a note            |
          > |   6) Load Note                 |  
          > |   7) Save note                |
@@ -98,7 +99,7 @@ fun listMilks() {
          > ----------------------------------
          > ==>> """.trimMargin(">"))
         when(option){
-          //  1-> listAllMilks()
+            1-> listAllMilks()
           //  2 -> searchByProtein()
           //  3-> searchByTitle()
            // 4 -> searchByBrand()
@@ -176,6 +177,27 @@ fun deleteMilk(){
 fun listAllMilks(){
 
     println(milkapi.listAllMilks())
+}
+
+fun save() {
+    try {
+        milkapi.store()
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        milkapi.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
+    }
+}
+
+fun exitApp(){
+    println("Exiting...bye")
+    System.exit(0)
 }
 
 

@@ -1,10 +1,16 @@
 package controllers
 
+
 import models.proteinMilk
+import persistence.Serializer
 
 import utils.isValidListIndex.isValidListIndexs
 
-class milkAPI {
+class milkAPI(serializerType: Serializer) {
+
+    private var serializer: Serializer = serializerType
+
+
 
     private var proteinMilks = ArrayList<proteinMilk>()
 
@@ -59,6 +65,17 @@ class milkAPI {
 
     fun isValidIndex(index: Int) :Boolean{
         return isValidListIndexs(index, proteinMilks);
+    }
+
+
+    @Throws(Exception::class)
+    fun load() {
+        proteinMilks = serializer.read() as ArrayList<proteinMilk>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(proteinMilks)
     }
 
 
