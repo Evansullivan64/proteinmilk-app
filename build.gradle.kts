@@ -4,6 +4,8 @@ plugins {
     kotlin("jvm") version "1.5.31"
 
     id("org.jetbrains.dokka") version "1.6.10"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+
     application
 }
 
@@ -22,8 +24,6 @@ dependencies {
     implementation("org.codehaus.jettison:jettison:1.4.1")
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.10")
 }
-
-
 
 tasks.test {
     useJUnitPlatform()

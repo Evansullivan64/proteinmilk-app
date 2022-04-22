@@ -1,9 +1,7 @@
 package controllers
 
-
 import models.proteinMilk
 import persistence.Serializer
-
 import utils.isValidListIndex.isValidListIndexs
 
 /**
@@ -20,10 +18,7 @@ class milkAPI(serializerType: Serializer) {
 
     private var serializer: Serializer = serializerType
 
-
-
     private var proteinMilks = ArrayList<proteinMilk>()
-
 
     fun add(proteinmilk: proteinMilk): Boolean {
         /**
@@ -33,7 +28,6 @@ class milkAPI(serializerType: Serializer) {
         return proteinMilks.add(proteinmilk)
     }
 
-
     fun updateMilks(indexToUpdate: Int, milk: proteinMilk?): Boolean {
         /**
          * updates a [proteinMilk] of this group.
@@ -42,7 +36,7 @@ class milkAPI(serializerType: Serializer) {
 
         val foundMilk = findMilks(indexToUpdate)
 
-           if ((foundMilk != null) && (milk != null)) {
+        if ((foundMilk != null) && (milk != null)) {
             foundMilk.milkTitle = milk.milkTitle
             foundMilk.price = milk.price
             foundMilk.proteinAmount = milk.proteinAmount
@@ -51,7 +45,7 @@ class milkAPI(serializerType: Serializer) {
             return true
         }
 
-            return false
+        return false
     }
 
     fun delete(indexToDelete: Int): proteinMilk? {
@@ -61,23 +55,22 @@ class milkAPI(serializerType: Serializer) {
     }
 
     fun listAllMilks(): String =
-        if  (proteinMilks.isEmpty()) "No milks stored"
+        if (proteinMilks.isEmpty()) "No milks stored"
         else formatListString(proteinMilks)
 
-
-    fun listMilksByBrand( brand:String): String =
-        if  (numberOfMilks() == 0)  "No milks stored"
+    fun listMilksByBrand(brand: String): String =
+        if (numberOfMilks() == 0) "No milks stored"
         else formatListString(proteinMilks.filter { milk -> milk.brand.contains(brand) })
 
-    fun listMilksByPrice( Price:Double): String =
-        if  (numberOfMilks() == 0)  "No milks stored"
+    fun listMilksByPrice(Price: Double): String =
+        if (numberOfMilks() == 0) "No milks stored"
         else formatListString(proteinMilks.filter { milk -> milk.price.equals(Price) })
 
-
-    fun formatListString(milksToFormat : List<proteinMilk>) : String =
+    fun formatListString(milksToFormat: List<proteinMilk>): String =
         milksToFormat
-            .joinToString (separator = "\n") { milk ->
-                proteinMilks.indexOf(milk).toString() + ": " + milk.toString() }
+            .joinToString(separator = "\n") { milk ->
+                proteinMilks.indexOf(milk).toString() + ": " + milk.toString()
+            }
 
     fun numberOfMilks(): Int {
         return proteinMilks.size
@@ -100,23 +93,17 @@ class milkAPI(serializerType: Serializer) {
         return false
     }
 
-
-
     fun listFavouriteMilk(): String =
-        if  (numberOfFavouriteMilks() == 0) "you have no favourite milks"
-        else formatListString(proteinMilks.filter { milks -> milks.isMilkFavourited})
-
+        if (numberOfFavouriteMilks() == 0) "you have no favourite milks"
+        else formatListString(proteinMilks.filter { milks -> milks.isMilkFavourited })
 
     fun numberOfFavouriteMilks(): Int = proteinMilks
         .filter { milk: proteinMilk -> milk.isMilkFavourited }
         .count()
 
-
-
-    fun isValidIndex(index: Int) :Boolean{
-        return isValidListIndexs(index, proteinMilks);
+    fun isValidIndex(index: Int): Boolean {
+        return isValidListIndexs(index, proteinMilks)
     }
-
 
     @Throws(Exception::class)
     fun load() {
@@ -127,6 +114,4 @@ class milkAPI(serializerType: Serializer) {
     fun store() {
         serializer.write(proteinMilks)
     }
-
-
 }
