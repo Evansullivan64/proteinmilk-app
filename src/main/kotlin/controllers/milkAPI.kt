@@ -6,6 +6,16 @@ import persistence.Serializer
 
 import utils.isValidListIndex.isValidListIndexs
 
+/**
+ * A group of protein milks.
+ *
+ * This class is responsible for the crud functionality of the system.
+ *
+ * @param proteinMilk the type of a proteinMilk in this group.
+ * @property serializerType the name of this group.
+ * @constructor Creates an empty group.
+ */
+
 class milkAPI(serializerType: Serializer) {
 
     private var serializer: Serializer = serializerType
@@ -16,11 +26,19 @@ class milkAPI(serializerType: Serializer) {
 
 
     fun add(proteinmilk: proteinMilk): Boolean {
+        /**
+         * Adds a [proteinMilk] to this group.
+         * @return the new size of the group.
+         */
         return proteinMilks.add(proteinmilk)
     }
 
 
     fun updateMilks(indexToUpdate: Int, milk: proteinMilk?): Boolean {
+        /**
+         * updates a [proteinMilk] of this group.
+         * @return true or false if the milk was updated.
+         */
 
         val foundMilk = findMilks(indexToUpdate)
 

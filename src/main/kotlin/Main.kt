@@ -77,7 +77,7 @@ fun mainMenu() : Int {
 }
 
 fun listMilks() {
-   // if (noteAPI.numberOfNotes() > 0) {
+
         val option = readNextInt(""" 
          > ----------------------------------
         >   _       _       _     __  __  _  _  _    
