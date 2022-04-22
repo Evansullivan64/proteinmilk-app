@@ -1,11 +1,11 @@
 package persistence
 
-import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver
 import models.proteinMilk
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
 
 class JSONSerializer(private val file: File) : Serializer {
     @Throws(Exception::class)
